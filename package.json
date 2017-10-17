@@ -1,6 +1,6 @@
 {
   "name": "xxd-log",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Simple console logger with colors and levels.",
   "main": "index.js",
   "scripts": {

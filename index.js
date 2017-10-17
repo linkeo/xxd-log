@@ -12,14 +12,16 @@ class Logger {
   /**
    * Make new Logger with options.
    * @param {object} options Options of logger printing
-   * @param {boolean} options.withTimestamp Control if print message with timestamp before, default as `true`
-   * @param {boolean} options.withLabel Control if print message with label (indicating log level) before, default as `true`
-   * @param {string} options.timestampFormat Define how timestamp looks like, see `moment.format()` (http://momentjs.com/docs/#/displaying/format/), default as 'YYYY-MM-SS HH:mm:ss'
+   * @param {boolean} options.withTimestamp Control if print message with timestamp before, default to `true`
+   * @param {boolean} options.withLabel Control if print message with label (indicating log level) before, default to `true`
+   * @param {string} options.timestampFormat Define how timestamp looks like, see `moment.format()` (http://momentjs.com/docs/#/displaying/format/), default to 'YYYY-MM-SS HH:mm:ss'
+   * @param {string} options.highlightStackTrace Control if highlight files in project (in `process.cwd()`, and not in `node_modules`) in error stack trace. default to `true`
    */
   constructor(options) {
     Object.defineProperty(this, 'options', { value: Object.assign({}, options) });
     this.options.withTimestamp = this.options.withTimestamp !== undefined ? this.options.withTimestamp : true;
     this.options.withLabel = this.options.withLabel !== undefined ? this.options.withLabel : true;
+    this.options.highlightStackTrace = this.options.highlightStackTrace !== undefined ? this.options.highlightStackTrace : true;
     this.options.timestampFormat = this.options.timestampFormat !== undefined ? this.options.timestampFormat : 'YYYY-MM-DD HH:mm:ss.SSS';
     this.chalk = chalk;
     this.Logger = Logger;
@@ -125,6 +127,23 @@ function makeMessage(label, colorizer, ...args) {
   if (this.options.withLabel && label) {
     messages.push(chalk.bold(colorizer(`[${label}]`)));
   }
-  messages.push(colorizer(util.format(...args)));
+  let msg = util.format(...args);
+  if (this.options.highlightStackTrace) {
+    msg = decorateErrorStack(msg);
+  }
+  messages.push(colorizer(msg));
   return messages.join(' ');
+}
+
+function decorateErrorStack(stack) {
+  const cwd = process.cwd();
+  if (!/\n\s*at\s+/.test(stack)) { // A simple test for stack trace style.
+    return stack;
+  }
+  return stack.split('\n').map(line => {
+    if (/^\s*at\s+/.test(line) && /:\d+:\d+/.test(line) && line.includes(cwd) && !line.includes('node_modules')) {
+      return chalk.bold(line);
+    }
+    return line;
+  }).join('\n');
 }
