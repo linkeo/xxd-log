@@ -13,7 +13,7 @@ declare class Logger {
   withLabel: boolean;
   timestampFormat: string;
   chalk: Chalk;
-  Logger: Logger;
+  Logger: typeof Logger;
   log(message?: any, ...optionalParams: any[]): void;
   echo(message?: any, ...optionalParams: any[]): void;
   println(message?: any, ...optionalParams: any[]): void;
