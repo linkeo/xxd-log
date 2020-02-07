@@ -1,6 +1,6 @@
 {
   "name": "xxd-log",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Simple console logger with colors and levels.",
   "main": "index.js",
   "scripts": {
@@ -22,7 +22,7 @@
   },
   "homepage": "https://github.com/linkeo/xxd-log#readme",
   "dependencies": {
-    "chalk": "^2.1.0",
-    "moment": "^2.18.1"
+    "chalk": "^2.4.2",
+    "moment": "^2.24.0"
   }
 }
