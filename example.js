@@ -12,5 +12,9 @@ log.warn({ count });
 log.error(new Error(`count (${count}) is wrong.`));
 log.fatal('Duang!');
 
+const print = log.trace;
+
+print('hello');
+
 // Use chalk directly
 console.log(log.chalk.red('This is red.'));
